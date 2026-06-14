@@ -122,31 +122,34 @@ with tab2:
     st.subheader("Top 10 Stores by Average Sales")
 
     top_stores = (
-        df.groupby("Store")["Weekly_Sales"]
-        .mean()
-        .sort_values(ascending=False)
-        .head(10)
-        .reset_index()
+    df.groupby("Store")["Weekly_Sales"]
+      .mean()
+      .sort_values(ascending=False)
+      .head(10)
+      .reset_index()
     )
 
+    top_stores["Store"] = "Store " + top_stores["Store"].astype(str)
+
     fig = px.bar(
-    top_stores,
-    x="Store",
-    y="Weekly_Sales",
-    color="Weekly_Sales",
-    color_continuous_scale="Greens",
-    text_auto=".2s",
-    title="Top 10 Stores by Average Sales"
+        top_stores,
+        x="Store",
+        y="Weekly_Sales",
+        color="Weekly_Sales",
+        color_continuous_scale="Blues",
+        text_auto=".2s",
+        title="Top 10 Stores by Average Sales"
     )
 
     fig.update_layout(
         title_x=0.5,
-        height=600
-    )
-
-    fig.update_traces(
-        texttemplate="$%{text:,.0f}",
-        textposition="outside"
+        height=650,
+        xaxis_title="Store",
+        yaxis_title="Average Weekly Sales ($)",
+        xaxis=dict(
+            tickangle=-45
+        ),
+        showlegend=False
     )
 
 
@@ -273,17 +276,23 @@ with tab3:
 #Матрица коррлеяций
 
 with tab4:
+
     st.subheader("Correlation Matrix")
+
     corr_matrix = df.select_dtypes(include="number").corr()
 
-    fig, ax = plt.subplots(figsize=(12, 8))
+    fig, ax = plt.subplots(
+        figsize=(12, 8),
+        facecolor="none"
+    )
+
+    ax.set_facecolor("none")
 
     sns.heatmap(
         corr_matrix,
         annot=True,
         fmt=".2f",
-        cmap="RdBu_r",
-        center=0,
+        cmap="Blues",
         square=True,
         linewidths=0.5,
         cbar_kws={"shrink": 0.8},
@@ -294,7 +303,19 @@ with tab4:
         "Correlation Matrix",
         fontsize=16,
         fontweight="bold",
-        pad=20
+        pad=20,
+        color="white"
+    )
+
+    ax.tick_params(
+        axis="x",
+        colors="white",
+        rotation=45
+    )
+
+    ax.tick_params(
+        axis="y",
+        colors="white"
     )
 
     st.pyplot(fig)
